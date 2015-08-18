@@ -3,6 +3,8 @@ package com.austinv11.husbandry;
 import com.austinv11.collectiveframework.minecraft.config.ConfigException;
 import com.austinv11.collectiveframework.minecraft.config.ConfigRegistry;
 import com.austinv11.collectiveframework.minecraft.logging.Logger;
+import com.austinv11.husbandry.api.IHusbandryRegistry;
+import com.austinv11.husbandry.impl.HusbandryRegistry;
 import com.austinv11.husbandry.proxy.CommonProxy;
 import com.austinv11.husbandry.reference.Config;
 import com.austinv11.husbandry.reference.Reference;
@@ -23,6 +25,8 @@ public class Husbandry {
 	
 	public static Logger LOGGER = new Logger(Reference.MOD_ID);
 	
+	public static IHusbandryRegistry registry;
+	
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		try {
@@ -30,6 +34,7 @@ public class Husbandry {
 		} catch (ConfigException e) {
 			e.printStackTrace();
 		}
+		registry = new HusbandryRegistry();
 	}
 	
 	@Mod.EventHandler
