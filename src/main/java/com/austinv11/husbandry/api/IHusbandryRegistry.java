@@ -32,5 +32,5 @@ public interface IHusbandryRegistry {
 	 * Gets the currently registered entities, the class key represents the entity class for the corresponding wrapper
 	 * @return A copy of the map of entities
 	 */
-	public Object getEntities();
+	public HashMap<Class, IEntityWrapper> getEntities();
 }

@@ -110,6 +110,15 @@ public class Traits {
 	 * @param animal The animal to store the traits into
 	 */
 	public void writeToAnimal(EntityLiving animal) {
+		NBTTagCompound traitsTag = writeToTag();
+		animal.getEntityData().setTag("genes", traitsTag);
+	}
+	
+	/**
+	 * Writes the traits instance to an {@link NBTTagCompound}
+	 * @return The traits tag
+	 */
+	public NBTTagCompound writeToTag() {
 		NBTTagCompound traitsTag = new NBTTagCompound();
 		NBTTagCompound fatherTag = new NBTTagCompound();
 		NBTTagList fatherIds = new NBTTagList();
@@ -128,7 +137,7 @@ public class Traits {
 		traitsTag.setTag("mother", motherTag);
 		traitsTag.setTag("motherIds", motherIds);
 		traitsTag.setString("gender", gender.toString());
-		animal.getEntityData().setTag("genes", traitsTag);
+		return traitsTag;
 	}
 	
 	/**
@@ -179,6 +188,42 @@ public class Traits {
 	 */
 	public static boolean hasTraits(EntityLiving animal) {
 		return animal.getEntityData().hasKey("genes");
+	}
+	
+	/**
+	 * Randomly generates traits with {@link NaturalGene}s only
+	 * @param animal The animal to generate the traits for
+	 * @return The traits
+	 */
+	public static Traits generateTraits(EntityLiving animal) {
+		try {
+			List<NaturalGene> applicableGenes = findApplicableGenes(animal);
+			List<Gene> fatherGenes = new ArrayList<Gene>();
+			List<Gene> motherGenes = new ArrayList<Gene>();
+			for (NaturalGene gene : applicableGenes) {
+				if (rng.nextFloat() <= gene.getSpawnChance())
+					motherGenes.add(gene);
+				if (rng.nextFloat() <= gene.getSpawnChance())
+					fatherGenes.add(gene);
+			}
+			return new Traits(fatherGenes, motherGenes, rng.nextBoolean() ? Gender.MALE : Gender.FEMALE);
+		} catch (Exception e) {
+			FMLLog.log("HusbandryAPI", Level.ERROR, "Error generating traits for "+animal.toString());
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private static List<NaturalGene> findApplicableGenes(EntityLiving animal) throws Exception {
+		List<NaturalGene> applicableGenes = new ArrayList<NaturalGene>();
+		List<Gene> allGenes = new ArrayList<Gene>(HusbandryAPI.retrieveRegistry().getGenes().values());
+		for (Gene gene : allGenes) {
+			if (gene instanceof NaturalGene) {
+				if (((NaturalGene) gene).canSpawn(animal))
+					applicableGenes.add((NaturalGene) gene);
+			}
+		}
+		return applicableGenes;
 	}
 	
 	private static List<Gene> getInheritedGenes(Traits origin, EntityLiving child, EntityLiving father, EntityLiving mother) throws Exception {
