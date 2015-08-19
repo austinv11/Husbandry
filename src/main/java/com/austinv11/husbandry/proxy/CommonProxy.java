@@ -10,4 +10,12 @@ public class CommonProxy {
 		MinecraftForge.EVENT_BUS.register(new GeneHandler());
 		MinecraftForge.EVENT_BUS.register(new EntityHandler());
 	}
+	
+	public boolean isShiftDown() {
+		return false;
+	}
+	
+	public boolean isCtrlDown() {
+		return false;
+	}
 }
