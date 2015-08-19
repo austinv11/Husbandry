@@ -4,4 +4,4 @@ husbandry.genetics.gender.female=Female
 husbandry.genetics.gender.unknown=Unknown
 # WAILA Compat
 husbandry.waila.moreinfo.1=Press Shift for paternal traits
-husbandry.waila.moreinfo.2=Press Shift+Ctrl for maternal traits
+husbandry.waila.moreinfo.2=Press Ctrl for maternal traits

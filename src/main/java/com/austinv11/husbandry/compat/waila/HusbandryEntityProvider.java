@@ -42,22 +42,7 @@ public class HusbandryEntityProvider implements IWailaEntityProvider {
 				genderSymbol = traits.gender == Gender.MALE ? SpecialChars.BLUE+"\u2642" : SpecialChars.LPURPLE+"\u2640";
 			}
 			currenttip.add(traits.gender.getLocalizedName()+genderSymbol);
-			if (!Husbandry.proxy.isShiftDown()) {
-				currenttip.add("<"+StatCollector.translateToLocal("husbandry.waila.moreinfo.1")+">");
-				currenttip.add("<"+StatCollector.translateToLocal("husbandry.waila.moreinfo.2")+">");
-			} else if (Husbandry.proxy.isCtrlDown()) {
-				List<Gene> activeGenes = traits.getActiveGenes();
-				for (Gene gene : traits.fatherGenes) {
-					String additionalSymbols = "";
-					if (Traits.searchForGene(activeGenes, gene) != -1) {
-						additionalSymbols = additionalSymbols+SpecialChars.GREEN+"\u2611";
-					} else {
-						additionalSymbols = additionalSymbols+SpecialChars.RED+"\u2612";
-					}
-					additionalSymbols = additionalSymbols+SpecialChars.LPURPLE+"\u24DC";
-					currenttip.add(StatCollector.translateToLocal(gene.getUnlocalizedName())+additionalSymbols);
-				}
-			} else {
+			if (Husbandry.proxy.isShiftDown()) {
 				List<Gene> activeGenes = traits.getActiveGenes();
 				for (Gene gene : traits.fatherGenes) {
 					String additionalSymbols = "";
@@ -69,7 +54,22 @@ public class HusbandryEntityProvider implements IWailaEntityProvider {
 					additionalSymbols = additionalSymbols+SpecialChars.BLUE+"\u24DF";
 					currenttip.add(StatCollector.translateToLocal(gene.getUnlocalizedName())+additionalSymbols);
 				}
-			}
+			} else
+				currenttip.add("<"+StatCollector.translateToLocal("husbandry.waila.moreinfo.1")+">");
+			if (Husbandry.proxy.isCtrlDown()) {
+				List<Gene> activeGenes = traits.getActiveGenes();
+				for (Gene gene : traits.fatherGenes) {
+					String additionalSymbols = "";
+					if (Traits.searchForGene(activeGenes, gene) != -1) {
+						additionalSymbols = additionalSymbols+SpecialChars.GREEN+"\u2611";
+					} else {
+						additionalSymbols = additionalSymbols+SpecialChars.RED+"\u2612";
+					}
+					additionalSymbols = additionalSymbols+SpecialChars.LPURPLE+"\u24DC";
+					currenttip.add(StatCollector.translateToLocal(gene.getUnlocalizedName())+additionalSymbols);
+				}
+			} else
+				currenttip.add("<"+StatCollector.translateToLocal("husbandry.waila.moreinfo.2")+">");
 		}
 		return currenttip;
 	}
