@@ -15,7 +15,7 @@ public class TestWrapper implements IEntityWrapper {
 	}
 	
 	@Override
-	public Item getEgg() {
+	public Item getEgg(EntityLiving animal, EntityLiving mate) {
 		return null;
 	}
 	

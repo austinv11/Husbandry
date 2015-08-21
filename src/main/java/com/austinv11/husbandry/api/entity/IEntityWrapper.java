@@ -18,9 +18,11 @@ public interface IEntityWrapper {
 	
 	/**
 	 * Gets the entities egg item, dropped through mating in place of creating a baby
+	 * @param animal The animal this wrapper belongs to
+	 * @param mate The animal's mate
 	 * @return The egg item, or null if this entity mates normally
 	 */
-	public Item getEgg();
+	public Item getEgg(EntityLiving animal, EntityLiving mate);
 	
 	/**
 	 * The age (in mc ticks) required for a baby to become an adult
