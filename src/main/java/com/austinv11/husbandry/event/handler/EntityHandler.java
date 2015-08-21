@@ -13,6 +13,7 @@ import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 
 import java.util.HashMap;
@@ -64,8 +65,19 @@ public class EntityHandler {
 					IEntityWrapper wrapper = entities.get(mother.getClass());
 					Item egg = wrapper.getEgg(mother, father);
 					if (egg != null) {
+						ItemStack eggStack = new ItemStack(egg);
+						NBTTagCompound eggTag = eggStack.getTagCompound();
+						eggTag.setBoolean("isFertileEgg", true);
+						eggTag.setString("fatherClass", father.getClass().getName());
+						NBTTagCompound fatherTag = new NBTTagCompound();
+						father.writeToNBT(fatherTag);
+						eggTag.setTag("father", fatherTag);
+						eggTag.setString("motherClass", mother.getClass().getName());
+						NBTTagCompound motherTag = new NBTTagCompound();
+						mother.writeToNBT(motherTag);
+						eggTag.setTag("mother", motherTag);
 						WorldUtils.spawnItemInWorld(new Location(event.child.posX, event.child.posY, event.child.posZ,
-								event.child.worldObj), new ItemStack(egg));
+								event.child.worldObj), eggStack);
 						event.setCanceled(true);
 						return;
 					} else {
@@ -84,8 +96,19 @@ public class EntityHandler {
 					IEntityWrapper wrapper = entities.get(father.getClass());
 					Item egg = wrapper.getEgg(father, mother);
 					if (egg != null) {
+						ItemStack eggStack = new ItemStack(egg);
+						NBTTagCompound eggTag = eggStack.getTagCompound();
+						eggTag.setBoolean("isFertileEgg", true);
+						eggTag.setString("fatherClass", father.getClass().getName());
+						NBTTagCompound fatherTag = new NBTTagCompound();
+						father.writeToNBT(fatherTag);
+						eggTag.setTag("father", fatherTag);
+						eggTag.setString("motherClass", mother.getClass().getName());
+						NBTTagCompound motherTag = new NBTTagCompound();
+						mother.writeToNBT(motherTag);
+						eggTag.setTag("mother", motherTag);
 						WorldUtils.spawnItemInWorld(new Location(event.child.posX, event.child.posY, event.child.posZ,
-								event.child.worldObj), new ItemStack(egg));
+								event.child.worldObj), eggStack);
 						event.setCanceled(true);
 					} else {
 						EntityLiving newChild = wrapper.mate(father, mother);

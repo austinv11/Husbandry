@@ -94,6 +94,40 @@ public class Traits {
 	}
 	
 	/**
+	 * Constructor for use to extract the traits information from an NBT tag
+	 * @param animal The animal
+	 */
+	public Traits(EntityLiving animal, NBTTagCompound tag) {
+		this.fatherGenes = new ArrayList<Gene>();
+		this.motherGenes = new ArrayList<Gene>();
+		try {
+			NBTTagCompound traitsTag = tag.getCompoundTag("genes");
+			gender = Gender.valueOf(traitsTag.getString("gender"));
+			NBTTagList fatherIds = traitsTag.getTagList("fatherIds", Constants.NBT.TAG_STRING);
+			NBTTagCompound fatherTag = traitsTag.getCompoundTag("father");
+			for (int i = 0; i < fatherIds.tagCount(); i++) {
+				String id = fatherIds.getStringTagAt(i);
+				NBTTagCompound geneTag = fatherTag.getCompoundTag(id);
+				Gene toConstructFrom = HusbandryAPI.retrieveRegistry().getGenes().get(id);
+				Constructor constructor = toConstructFrom.getClass().getConstructor(EntityLiving.class, NBTTagCompound.class);
+				fatherGenes.add((Gene) constructor.newInstance(animal, geneTag));
+			}
+			NBTTagList motherIds = traitsTag.getTagList("motherIds", Constants.NBT.TAG_STRING);
+			NBTTagCompound motherTag = traitsTag.getCompoundTag("mother");
+			for (int i = 0; i < motherIds.tagCount(); i++) {
+				String id = motherIds.getStringTagAt(i);
+				NBTTagCompound geneTag = motherTag.getCompoundTag(id);
+				Gene toConstructFrom = HusbandryAPI.retrieveRegistry().getGenes().get(id);
+				Constructor constructor = toConstructFrom.getClass().getConstructor(EntityLiving.class, NBTTagCompound.class);
+				motherGenes.add((Gene) constructor.newInstance(animal, geneTag));
+			}
+		} catch (Exception e) {
+			FMLLog.log("HusbandryAPI", Level.ERROR, "Error loading traits from NBT from entity "+animal.toString());
+			e.printStackTrace();
+		}
+	}
+	
+	/**
 	 * Constructor for use to generate custom traits
 	 * @param fatherGenes The genes from the father
 	 * @param motherGenes The genes from the mother
